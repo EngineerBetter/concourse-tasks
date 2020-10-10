@@ -49,7 +49,7 @@ var _ = Describe("GitCommitIfChanged", func() {
 
 			session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
-			Eventually(session, 2*time.Minute, time.Second).Should(gexec.Exit())
+			Eventually(session, 15*time.Second, time.Second).Should(gexec.Exit())
 			Expect(session.ExitCode()).To(BeZero(), message(flyArgs, session))
 		})
 	})
@@ -67,7 +67,7 @@ var _ = Describe("GitCommitIfChanged", func() {
 
 			session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
-			Eventually(session, 2*time.Minute, time.Second).Should(gexec.Exit())
+			Eventually(session, 15*time.Second, time.Second).Should(gexec.Exit())
 			Expect(session.ExitCode()).To(BeZero(), message(flyArgs, session))
 
 			after := bashIn(outputPath,"git status")
@@ -85,7 +85,7 @@ func bash(command string) *gexec.Session {
 	cmd := exec.Command("bash", "-x", "-e", "-u", "-c", command)
 	session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
-	Eventually(session, 2*time.Minute, time.Second).Should(gexec.Exit())
+	Eventually(session, 15*time.Second, time.Second).Should(gexec.Exit())
 	Expect(session.ExitCode()).To(BeZero(), "bash command: %v\nSTDOUT:\n%v\nSTDERR:\n%v", command, string(session.Out.Contents()), string(session.Err.Contents()))
 	return session
 }

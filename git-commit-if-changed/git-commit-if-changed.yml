@@ -1,0 +1,15 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source: { repository: bash }
+
+inputs:
+  - name: this
+  - name: input
+
+outputs:
+  - name: output
+
+run:
+  path: this/git-commit-if-changed.sh

@@ -44,7 +44,7 @@ var _ = Describe("GitCommitIfChanged", func() {
 			Expect(err).NotTo(HaveOccurred())
 			configPath := filepath.Join(pwd, "git-commit-if-changed.yml")
 
-			flyArgs := []string{"-t", "eb", "execute", "-c", configPath, "--input=this="+pwd, "--input=input="+inputPath, "--output=output="+outputPath}
+			flyArgs := []string{"-t", "eb", "execute", "-c", configPath, "--include-ignored", "--input=this="+pwd, "--input=input="+inputPath, "--output=output="+outputPath}
 			cmd := exec.Command("fly", flyArgs...)
 
 			session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
@@ -62,7 +62,7 @@ var _ = Describe("GitCommitIfChanged", func() {
 
 			bashIn(inputPath,"echo bar >> file")
 
-			flyArgs := []string{"-t", "eb", "execute", "-c", configPath, "--input=this="+pwd, "--input=input="+inputPath, "--output=output="+outputPath}
+			flyArgs := []string{"-t", "eb", "execute", "-c", configPath, "--include-ignored", "--input=this="+pwd, "--input=input="+inputPath, "--output=output="+outputPath}
 			cmd := exec.Command("fly", flyArgs...)
 
 			session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)

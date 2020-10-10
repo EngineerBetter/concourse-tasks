@@ -41,5 +41,5 @@ var _ = Describe("GitCommitIfChanged", func() {
 })
 
 func message(flyArgs []string, session *gexec.Session) string {
-	return fmt.Sprintf("fly args: %v\nSTDOUT:\n%v\nSTDERR:\n%v", flyArgs, string(session.Err.Contents()), string(session.Err.Contents()))
+	return fmt.Sprintf("fly args: %v\nSTDOUT:\n%v\nSTDERR:\n%v", flyArgs, string(session.Out.Contents()), string(session.Err.Contents()))
 }

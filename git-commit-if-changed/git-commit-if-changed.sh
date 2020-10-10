@@ -11,10 +11,10 @@ pushd input
   if ! git diff-index --quiet HEAD; then
     git add -A
 
-    git config --global user.email "systems@engineerbetter.com"
-    git config --global user.name "CI"
+    git config --global user.email "${GIT_AUTHOR_EMAIL}"
+    git config --global user.name "${GIT_AUTHOR_NAME}"
 
-    git commit -m "Update dependencies"
+    git commit -m "${GIT_COMMIT_MESSAGE}"
   fi
 popd
 

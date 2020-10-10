@@ -13,3 +13,8 @@ outputs:
 
 run:
   path: this/git-commit-if-changed.sh
+
+params:
+  GIT_AUTHOR_NAME:
+  GIT_AUTHOR_EMAIL:
+  GIT_COMMIT_MESSAGE:

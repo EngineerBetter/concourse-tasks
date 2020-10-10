@@ -55,7 +55,7 @@ var _ = Describe("GitCommitIfChanged", func() {
 	})
 
 	When("there is a change", func(){
-		It("commits the change and exits successfully", func(){
+		It("commits the configured change and exits successfully", func(){
 			pwd, err := os.Getwd()
 			Expect(err).NotTo(HaveOccurred())
 			configPath := filepath.Join(pwd, "git-commit-if-changed.yml")
@@ -64,18 +64,30 @@ var _ = Describe("GitCommitIfChanged", func() {
 
 			flyArgs := []string{"-t", "eb", "execute", "-c", configPath, "--include-ignored", "--input=this="+pwd, "--input=input="+inputPath, "--output=output="+outputPath}
 			cmd := exec.Command("fly", flyArgs...)
+			cmd.Env = os.Environ()
+			setEnv("GIT_AUTHOR_EMAIL", "test@example.com", cmd)
+			setEnv("GIT_AUTHOR_NAME", "Lesley", cmd)
+			setEnv("GIT_COMMIT_MESSAGE", "automated commit", cmd)
 
 			session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
 			Eventually(session, 15*time.Second, time.Second).Should(gexec.Exit())
 			Expect(session.ExitCode()).To(BeZero(), message(flyArgs, session))
 
-			after := bashIn(outputPath,"git status")
-			Expect(after.Out).ToNot(gbytes.Say("Changes not staged for commit"))
-			Expect(after.Out).To(gbytes.Say("nothing to commit, working tree clean"))
+			status := bashIn(outputPath,"git status")
+			Expect(status.Out).ToNot(gbytes.Say("Changes not staged for commit"))
+			Expect(status.Out).To(gbytes.Say("nothing to commit, working tree clean"))
+
+			head := bashIn(outputPath,"git show HEAD")
+			Expect(head.Out).To(gbytes.Say("Author: Lesley <test@example.com>"))
+			Expect(head.Out).To(gbytes.Say("automated commit"))
 		})
 	})
 })
+
+func setEnv(key, value string, cmd *exec.Cmd) {
+	cmd.Env = append(cmd.Env, key+"="+value)
+}
 
 func bashIn(dir, command string) *gexec.Session {
 	return bash("cd "+dir+" && "+command)

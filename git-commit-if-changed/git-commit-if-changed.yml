@@ -2,7 +2,7 @@
 platform: linux
 image_resource:
   type: registry-image
-  source: { repository: bash }
+  source: { repository: engineerbetter/pcf-ops }
 
 inputs:
   - name: this

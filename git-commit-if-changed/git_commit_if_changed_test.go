@@ -26,7 +26,7 @@ var _ = Describe("GitCommitIfChanged", func() {
 		Expect(err).NotTo(HaveOccurred())
 		stuff["inputPath"] = inputPath
 
-		bash(`cd `+inputPath+`
+		bashIn(inputPath, `
 			git init
 			echo foo > file
 			git add -A
@@ -60,7 +60,7 @@ var _ = Describe("GitCommitIfChanged", func() {
 			Expect(err).NotTo(HaveOccurred())
 			configPath := filepath.Join(pwd, "git-commit-if-changed.yml")
 
-			bash(`cd `+inputPath+` && echo bar >> file`)
+			bashIn(inputPath,"echo bar >> file")
 
 			flyArgs := []string{"-t", "eb", "execute", "-c", configPath, "--input=this="+pwd, "--input=input="+inputPath, "--output=output="+outputPath}
 			cmd := exec.Command("fly", flyArgs...)
@@ -70,11 +70,16 @@ var _ = Describe("GitCommitIfChanged", func() {
 			Eventually(session, 2*time.Minute, time.Second).Should(gexec.Exit())
 			Expect(session.ExitCode()).To(BeZero(), message(flyArgs, session))
 
-			after := bash(`cd `+outputPath+` && git status`)
-			Expect(after.Out).To(gbytes.Say("wibble"))
+			after := bashIn(outputPath,"git status")
+			Expect(after.Out).ToNot(gbytes.Say("Changes not staged for commit"))
+			Expect(after.Out).To(gbytes.Say("nothing to commit, working tree clean"))
 		})
 	})
 })
+
+func bashIn(dir, command string) *gexec.Session {
+	return bash("cd "+dir+" && "+command)
+}
 
 func bash(command string) *gexec.Session {
 	cmd := exec.Command("bash", "-x", "-e", "-u", "-c", command)

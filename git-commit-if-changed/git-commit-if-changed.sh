@@ -4,6 +4,7 @@ set -euxo pipefail
 
 pushd input
   # Display changed files for debugging
+  git status
   git diff-index HEAD --
 
   # Only commit if the files changed

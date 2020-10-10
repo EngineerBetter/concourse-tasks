@@ -4,8 +4,8 @@ import (
 	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/onsi/gomega/gbytes"
-	"github.com/onsi/gomega/gexec"
+	. "github.com/onsi/gomega/gbytes"
+	. "github.com/onsi/gomega/gexec"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -47,9 +47,9 @@ var _ = Describe("GitCommitIfChanged", func() {
 			flyArgs := []string{"-t", "eb", "execute", "-c", configPath, "--include-ignored", "--input=this="+pwd, "--input=input="+inputPath, "--output=output="+outputPath}
 			cmd := exec.Command("fly", flyArgs...)
 
-			session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
+			session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
-			Eventually(session, 15*time.Second, time.Second).Should(gexec.Exit())
+			Eventually(session, 15*time.Second, time.Second).Should(Exit())
 			Expect(session.ExitCode()).To(BeZero(), message(flyArgs, session))
 		})
 	})
@@ -69,18 +69,18 @@ var _ = Describe("GitCommitIfChanged", func() {
 			setEnv("GIT_AUTHOR_NAME", "Lesley", cmd)
 			setEnv("GIT_COMMIT_MESSAGE", "automated commit", cmd)
 
-			session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
+			session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
-			Eventually(session, 15*time.Second, time.Second).Should(gexec.Exit())
+			Eventually(session, 15*time.Second, time.Second).Should(Exit())
 			Expect(session.ExitCode()).To(BeZero(), message(flyArgs, session))
 
 			status := bashIn(outputPath,"git status")
-			Expect(status.Out).ToNot(gbytes.Say("Changes not staged for commit"))
-			Expect(status.Out).To(gbytes.Say("nothing to commit, working tree clean"))
+			Expect(status.Out).ToNot(Say("Changes not staged for commit"))
+			Expect(status.Out).To(Say("nothing to commit, working tree clean"))
 
 			head := bashIn(outputPath,"git show HEAD")
-			Expect(head.Out).To(gbytes.Say("Author: Lesley <test@example.com>"))
-			Expect(head.Out).To(gbytes.Say("automated commit"))
+			Expect(head.Out).To(Say("Author: Lesley <test@example.com>"))
+			Expect(head.Out).To(Say("automated commit"))
 		})
 	})
 })
@@ -89,19 +89,19 @@ func setEnv(key, value string, cmd *exec.Cmd) {
 	cmd.Env = append(cmd.Env, key+"="+value)
 }
 
-func bashIn(dir, command string) *gexec.Session {
+func bashIn(dir, command string) *Session {
 	return bash("cd "+dir+" && "+command)
 }
 
-func bash(command string) *gexec.Session {
+func bash(command string) *Session {
 	cmd := exec.Command("bash", "-x", "-e", "-u", "-c", command)
-	session, err := gexec.Start(cmd, GinkgoWriter, GinkgoWriter)
+	session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
-	Eventually(session, 15*time.Second, time.Second).Should(gexec.Exit())
+	Eventually(session, 15*time.Second, time.Second).Should(Exit())
 	Expect(session.ExitCode()).To(BeZero(), "bash command: %v\nSTDOUT:\n%v\nSTDERR:\n%v", command, string(session.Out.Contents()), string(session.Err.Contents()))
 	return session
 }
 
-func message(flyArgs []string, session *gexec.Session) string {
+func message(flyArgs []string, session *Session) string {
 	return fmt.Sprintf("fly args: %v\nSTDOUT:\n%v\nSTDERR:\n%v", flyArgs, string(session.Out.Contents()), string(session.Err.Contents()))
 }

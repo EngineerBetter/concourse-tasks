@@ -15,16 +15,12 @@ import (
 
 var _ = Describe("GitCommitIfChanged", func() {
 	var err error
-	var stuff map[string]interface{}
 	var inputPath, outputPath string
 
 	BeforeEach(func(){
-		stuff = make(map[string]interface{})
-
 		// Generate temp dir for each input
 		inputPath, err = ioutil.TempDir("", "git-commit-if-changed-input")
 		Expect(err).NotTo(HaveOccurred())
-		stuff["inputPath"] = inputPath
 
 		bashIn(inputPath, `
 			git init
@@ -35,7 +31,6 @@ var _ = Describe("GitCommitIfChanged", func() {
 		// Generate temp dir for each output
 		outputPath, err = ioutil.TempDir("", "git-commit-if-changed-output")
 		Expect(err).NotTo(HaveOccurred())
-		stuff["outputPath"] = outputPath
 	})
 
 	When("there is no change", func() {

@@ -1,0 +1,16 @@
+---
+config: file_write.yml
+cases:
+- when: it is called without params
+  it: { exits: 1 }
+- when: it is called with params
+  it:
+    exits: 0
+    has_outputs:
+    - name: output
+      for_which:
+      - { bash: "cat myfile", exits: 0, says: [mycontents] }
+      - { bash: "ls", exits: 0, says: [myfile] }
+  params:
+    CONTENTS: mycontents
+    FILENAME: myfile

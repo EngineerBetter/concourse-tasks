@@ -1,0 +1,15 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source: { repository: engineerbetter/pcf-ops }
+
+inputs:
+- name: this
+
+run:
+  path: this/echo.sh
+
+params:
+  EXIT_CODE: 0
+  MESSAGE: foo

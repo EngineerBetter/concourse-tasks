@@ -77,6 +77,38 @@ var _ = Describe("GitCommitIfChanged", func() {
 			Expect(head.Out).To(Say("Author: Lesley <test@example.com>"))
 			Expect(head.Out).To(Say("automated commit"))
 		})
+
+		When("only certain files should be added", func(){
+			It("commits the configured files and ignores the others", func() {
+				pwd, err := os.Getwd()
+				Expect(err).NotTo(HaveOccurred())
+				configPath := filepath.Join(pwd, "git-commit-if-changed.yml")
+
+				bashIn(inputPath, "echo 1 > file1 && echo 2 > file2 && echo 3 > file3")
+
+				flyArgs := []string{"-t", "eb", "execute", "-c", configPath, "--include-ignored", "--input=this=" + pwd, "--input=input=" + inputPath, "--output=output=" + outputPath}
+				cmd := exec.Command("fly", flyArgs...)
+				cmd.Env = os.Environ()
+				setEnv("FILES", "file1,file2", cmd)
+				setEnv("GIT_AUTHOR_EMAIL", "test@example.com", cmd)
+				setEnv("GIT_AUTHOR_NAME", "Lesley", cmd)
+				setEnv("GIT_COMMIT_MESSAGE", "automated commit", cmd)
+
+				session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
+				Expect(err).NotTo(HaveOccurred())
+				Eventually(session, 15*time.Second, time.Second).Should(Exit())
+				Expect(session.ExitCode()).To(BeZero(), message(flyArgs, session))
+
+				status := bashIn(outputPath, "ls")
+				Expect(status.Out).To(Say("file1"))
+				Expect(status.Out).To(Say("file2"))
+				Expect(status.Out).ToNot(Say("file3"))
+
+				head := bashIn(outputPath, "git show HEAD")
+				Expect(head.Out).To(Say("Author: Lesley <test@example.com>"))
+				Expect(head.Out).To(Say("automated commit"))
+			})
+		})
 	})
 })
 

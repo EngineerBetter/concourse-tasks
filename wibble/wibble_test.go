@@ -28,6 +28,11 @@ type TaskTestSuite struct {
 					Says  []string `yaml:"says"`
 				} `yaml:"for_which"`
 			} `yaml:"has_outputs,omitempty"`
+			HasInputs []struct {
+				Name     string `yaml:"name"`
+				From     string `yaml:"from"`
+				Setup     string `yaml:"setup"`
+			} `yaml:"has_inputs,omitempty"`
 		} `yaml:"it,omitempty"`
 		Params map[string]string `yaml:"params,omitempty"`
 	} `yaml:"cases"`
@@ -73,6 +78,25 @@ var _ = Describe("Wibble", func() {
 			executeSpec(spec)
 		})
 	})
+
+	Describe("inputs", func() {
+		BeforeEach(func() {
+			specFile = "input_spec.yml"
+		})
+
+		It("loads correctly", func() {
+			Expect(spec.Config).To(Equal("existing_file_write.yml"))
+			Expect(spec.Cases[0].It.HasInputs).To(HaveLen(1))
+			Expect(spec.Cases[0].It.HasInputs[0].Name).To(Equal("input"))
+			Expect(spec.Cases[0].It.HasInputs[0].From).To(Equal("fixtures/existing_file"))
+
+			Expect(spec.Cases[0].It.HasOutputs[0].ForWhich[1].Exits).To(Equal(1))
+		})
+
+		It("can be executed", func() {
+			executeSpec(spec)
+		})
+	})
 })
 
 func executeSpec(spec *TaskTestSuite) {
@@ -81,6 +105,23 @@ func executeSpec(spec *TaskTestSuite) {
 
 	for _, specCase := range spec.Cases {
 		Describe(specCase.When, func() {
+			inputDirs := make(map[string]string)
+			for _, input := range specCase.It.HasInputs {
+				inputPath, err := ioutil.TempDir("", input.Name)
+				Expect(err).ToNot(HaveOccurred())
+
+				if input.From != "" {
+					Expect(input.From).To(BeADirectory())
+					mustBash("cp -r "+input.From+"/. "+inputPath)
+				}
+
+				if input.Setup != "" {
+					mustBashIn(inputPath, input.Setup)
+				}
+
+				inputDirs[input.Name] = inputPath
+			}
+
 			outputDirs := make(map[string]string)
 			for _, outputExpectation := range specCase.It.HasOutputs {
 				outputPath, err := ioutil.TempDir("", outputExpectation.Name)
@@ -88,7 +129,7 @@ func executeSpec(spec *TaskTestSuite) {
 				outputDirs[outputExpectation.Name] = outputPath
 			}
 
-			session := flyExecute(spec.Config, specCase.Params, outputDirs)
+			session := flyExecute(spec.Config, specCase.Params, inputDirs, outputDirs)
 			Expect(session).To(Exit(specCase.It.Exits), outErrMessage(session))
 			Expect(session).To(Say("executing build"))
 			Expect(session).To(Say("initializing"))
@@ -100,7 +141,8 @@ func executeSpec(spec *TaskTestSuite) {
 			for _, outputExpectation := range specCase.It.HasOutputs {
 				for _, forWhich := range outputExpectation.ForWhich {
 					Expect(forWhich.Bash).ToNot(BeNil())
-					assertionSession := bashIn(outputDirs[outputExpectation.Name], forWhich.Bash)
+					// THE REDIRECT IS ABSOLUTE CHEDDAR
+					assertionSession := bashIn(outputDirs[outputExpectation.Name], forWhich.Bash+" 2>&1")
 					Expect(assertionSession).To(Exit(forWhich.Exits), outErrMessage(assertionSession))
 					for _, sayExpectation := range forWhich.Says {
 						Expect(assertionSession).To(Say(sayExpectation))
@@ -111,11 +153,15 @@ func executeSpec(spec *TaskTestSuite) {
 	}
 }
 
-func flyExecute(configPath string, params map[string]string, outputDirs map[string]string) *Session {
+func flyExecute(configPath string, params map[string]string, inputDirs, outputDirs map[string]string) *Session {
 	pwd, err := os.Getwd()
 	Expect(err).NotTo(HaveOccurred())
 
 	flyArgs := []string{"-t", "eb", "execute", "-c", configPath, "--include-ignored", "--input=this=" + pwd}
+
+	for name, dir := range inputDirs {
+		flyArgs = append(flyArgs, "--input="+name+"="+dir)
+	}
 
 	for name, dir := range outputDirs {
 		flyArgs = append(flyArgs, "--output="+name+"="+dir)
@@ -150,6 +196,15 @@ func bash(command string) *Session {
 	session, err := Start(cmd, GinkgoWriter, GinkgoWriter)
 	Expect(err).NotTo(HaveOccurred())
 	Eventually(session, 15*time.Second, time.Second).Should(Exit())
+	return session
+}
+
+func mustBashIn(dir, command string) *Session {
+	return mustBash("cd " + dir + " && " + command)
+}
+
+func mustBash(command string) *Session {
+	session := bash(command)
 	Expect(session.ExitCode()).To(BeZero(), "bash command: %v\nSTDOUT:\n%v\nSTDERR:\n%v", command, string(session.Out.Contents()), string(session.Err.Contents()))
 	return session
 }

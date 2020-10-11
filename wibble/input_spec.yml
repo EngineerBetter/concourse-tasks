@@ -1,0 +1,31 @@
+---
+config: existing_file_write.yml
+cases:
+- when: no modifier is specified
+  it:
+    has_outputs:
+    - name: output
+      for_which:
+        - { bash: "stat existing", exits: 0}
+        - { bash: "stat modified", exits: 1, says: ["modified: stat: No such file or directory"]}
+    has_inputs:
+    - name: input
+      from: fixtures/existing_file
+  params: &params
+    CONTENTS: mycontents
+    FILENAME: myfile
+- when: modifier is specified
+  it:
+    has_outputs:
+      - name: output
+        for_which:
+          - { bash: "stat existing", exits: 0 }
+          - { bash: "stat modified", exits: 0 }
+    has_inputs:
+      - name: input
+        from: fixtures/existing_file
+        setup: |
+          echo foo > modified
+  params: &params
+    CONTENTS: mycontents
+    FILENAME: myfile

@@ -11,6 +11,7 @@ cases:
       for_which:
       - { bash: "cat myfile", exits: 0, says: [mycontents] }
       - { bash: "ls", exits: 0, says: [myfile] }
+      - { bash: "echo foo bar", exits: 0, says: [foo, bar] }
   params:
     CONTENTS: mycontents
     FILENAME: myfile

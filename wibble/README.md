@@ -36,7 +36,7 @@ cases:
       - name: output
         for_which:
           # The following bash will be executed and asserted against
-          - { bash: "stat existing", exits: 0 }
+          - { bash: "stat existing", exits: 0, says: "4096 0 0 existing" }
           - { bash: "stat modified", exits: 0 }
     # Inputs needed for this test
     has_inputs:

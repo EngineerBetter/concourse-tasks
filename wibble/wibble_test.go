@@ -9,6 +9,7 @@ import (
 	. "github.com/EngineerBetter/wibble"
 	"io/ioutil"
 	"os"
+	"time"
 )
 
 var _ = Describe("", func() {
@@ -47,7 +48,14 @@ var _ = Describe("", func() {
 
 					var session *Session
 					It(fmt.Sprintf("exits %d", specCase.It.Exits), func() {
-						session = FlyExecute(targetArg, spec.Config, specCase.Params, inputDirs, outputDirs)
+						within := specCase.Within
+						if within == "" {
+							within = defaultTimeout
+						}
+						timeout, err := time.ParseDuration(within)
+						Expect(err).ToNot(HaveOccurred())
+						timeout = timeout * time.Duration(timeoutFactorArg)
+						session = FlyExecute(targetArg, spec.Config, specCase.Params, inputDirs, outputDirs, timeout)
 						Expect(session).To(Exit(specCase.It.Exits), OutErrMessage(session))
 						Expect(session).To(Say("executing build"))
 						Expect(session).To(Say("initializing"))

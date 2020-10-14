@@ -14,6 +14,7 @@ type TaskTestSuite struct {
 	Config string `yaml:"config"`
 	Cases  []struct {
 		When string `yaml:"when"`
+		Within string `yaml:"within"`
 		It   struct {
 			Exits      int      `yaml:"exits"`
 			Says       []string `yaml:"says"`
@@ -35,7 +36,7 @@ type TaskTestSuite struct {
 	} `yaml:"cases"`
 }
 
-func FlyExecute(target, configPath string, params map[string]string, inputDirs, outputDirs map[string]string) *gexec.Session {
+func FlyExecute(target, configPath string, params map[string]string, inputDirs, outputDirs map[string]string, timeout time.Duration) *gexec.Session {
 	pwd, err := os.Getwd()
 	gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
@@ -57,7 +58,7 @@ func FlyExecute(target, configPath string, params map[string]string, inputDirs, 
 
 	session, err := gexec.Start(cmd, ginkgo.GinkgoWriter, ginkgo.GinkgoWriter)
 	gomega.Expect(err).NotTo(gomega.HaveOccurred())
-	gomega.Eventually(session, 20*time.Second).Should(gexec.Exit())
+	gomega.Eventually(session, timeout).Should(gexec.Exit())
 	return session
 }
 

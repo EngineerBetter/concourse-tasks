@@ -18,8 +18,10 @@ import (
 var specs []*wibble.TaskTestSuite
 
 var specsArg string
+var targetArg string
 func init() {
 	flag.StringVar(&specsArg, "specs", "", "Comma-separated list of spec files to execute")
+	flag.StringVar(&targetArg, "target", "", "fly target")
 }
 
 func TestWibble(t *testing.T) {
@@ -28,6 +30,10 @@ func TestWibble(t *testing.T) {
 
 	if specsArg == "" {
 		log.Fatal("--specs must be provided")
+	}
+
+	if targetArg == "" {
+		log.Fatal("--target must be provided")
 	}
 
 	for _, specFile := range specFiles {

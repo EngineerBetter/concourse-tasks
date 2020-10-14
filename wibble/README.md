@@ -5,14 +5,14 @@ Integration-tests Concourse tasks using `fly execute`, using a YAML test definit
 ## Usage
 
 ```terminal
-$ ginkgo -- --specs some_spec.yml
+$ ginkgo -- --specs some_spec.yml --target eb
 ```
 
 Or alternatively
 
 ```terminal
 $ ginkgo build .
-$ ./wibble-test --specs some_spec.yml
+$ ./wibble-test --specs some_spec.yml  --target eb
 ```
 
 ## Spec Format

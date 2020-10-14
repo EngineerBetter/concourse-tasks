@@ -35,11 +35,11 @@ type TaskTestSuite struct {
 	} `yaml:"cases"`
 }
 
-func FlyExecute(configPath string, params map[string]string, inputDirs, outputDirs map[string]string) *gexec.Session {
+func FlyExecute(target, configPath string, params map[string]string, inputDirs, outputDirs map[string]string) *gexec.Session {
 	pwd, err := os.Getwd()
 	gomega.Expect(err).NotTo(gomega.HaveOccurred())
 
-	flyArgs := []string{"-t", "eb", "execute", "-c", configPath, "--include-ignored", "--input=this=" + pwd}
+	flyArgs := []string{"-t", target, "execute", "-c", configPath, "--include-ignored", "--input=this=" + pwd}
 
 	for name, dir := range inputDirs {
 		flyArgs = append(flyArgs, "--input="+name+"="+dir)

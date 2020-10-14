@@ -47,7 +47,7 @@ var _ = Describe("", func() {
 
 					var session *Session
 					It(fmt.Sprintf("exits %d", specCase.It.Exits), func() {
-						session = FlyExecute(spec.Config, specCase.Params, inputDirs, outputDirs)
+						session = FlyExecute(targetArg, spec.Config, specCase.Params, inputDirs, outputDirs)
 						Expect(session).To(Exit(specCase.It.Exits), OutErrMessage(session))
 						Expect(session).To(Say("executing build"))
 						Expect(session).To(Say("initializing"))

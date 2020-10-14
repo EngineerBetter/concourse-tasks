@@ -2,6 +2,7 @@ package wibble_test
 
 import (
 	"flag"
+	"fmt"
 	"github.com/EngineerBetter/wibble"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -57,9 +58,10 @@ func loadSpec(filename string) {
 }
 
 var _ = BeforeSuite(func() {
-	Expect(specs).ToNot(BeEmpty())
 	// Do validation that the test spec is valid here, where we can use assertions
+	Expect(specs).ToNot(BeEmpty())
 	for _, spec := range specs {
+		Expect(spec.Cases).ToNot(BeEmpty(), fmt.Sprintf("%s had no cases", spec.Config))
 		for _, specCase := range spec.Cases {
 			for _, input := range specCase.It.HasInputs {
 				if input.From != "" {

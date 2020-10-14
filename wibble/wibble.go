@@ -57,7 +57,7 @@ func FlyExecute(target, configPath string, params map[string]string, inputDirs, 
 
 	session, err := gexec.Start(cmd, ginkgo.GinkgoWriter, ginkgo.GinkgoWriter)
 	gomega.Expect(err).NotTo(gomega.HaveOccurred())
-	gomega.Eventually(session, 20*time.Second, time.Second).Should(gexec.Exit())
+	gomega.Eventually(session, 20*time.Second).Should(gexec.Exit())
 	return session
 }
 
@@ -77,7 +77,7 @@ func Bash(command string) *gexec.Session {
 	cmd := exec.Command("bash", "-x", "-e", "-u", "-c", command)
 	session, err := gexec.Start(cmd, ginkgo.GinkgoWriter, ginkgo.GinkgoWriter)
 	gomega.Expect(err).NotTo(gomega.HaveOccurred())
-	gomega.Eventually(session, 20*time.Second, time.Second).Should(gexec.Exit())
+	gomega.Eventually(session, 20*time.Second).Should(gexec.Exit())
 	return session
 }
 

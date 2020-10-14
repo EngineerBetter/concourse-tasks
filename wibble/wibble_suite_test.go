@@ -35,7 +35,7 @@ func TestWibble(t *testing.T) {
 	for _, specFile := range specFiles {
 		loadSpec(specFile)
 	}
-	RunSpecs(t, "Wibble Suite")
+	RunSpecs(t, "Concourse Tasks")
 }
 
 func loadSpec(filename string) {

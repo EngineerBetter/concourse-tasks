@@ -5,8 +5,10 @@ Integration-tests Concourse tasks using `fly execute`, using a YAML test definit
 ## Usage
 
 ```terminal
-$ ginkgo -- --specs some_spec.yml --target eb
+$ ginkgo -- --specs some_spec.yml --target eb [--timeout-factor <int>]
 ```
+
+Where `timeout-factor` multiplies the default or provided timeouts for execution. Useful if your Concourse is slower than the person who wrote the spec.
 
 Or alternatively
 
@@ -26,6 +28,8 @@ config: existing_file_write.yml
 cases:
 # Each 'when' maps to a `fly execute` invocation
 - when: modifier is specified
+  # timeout for fly execute
+  within: 1m30s
   it:
     # Expected exit code of fly execute
     exits: 0

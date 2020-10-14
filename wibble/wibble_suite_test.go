@@ -16,8 +16,6 @@ import (
 )
 
 var specs []*wibble.TaskTestSuite
-var yamlFile []byte
-var setupErr error
 
 var specsArg string
 func init() {
@@ -47,7 +45,7 @@ func loadSpec(filename string) {
 		log.Fatalf("Spec file '%s' does not exist", filename)
 	}
 
-	yamlFile, setupErr = ioutil.ReadFile(filename)
+	yamlFile, setupErr := ioutil.ReadFile(filename)
 	expectErrToNotHaveOccurred(setupErr)
 
 	var spec *wibble.TaskTestSuite

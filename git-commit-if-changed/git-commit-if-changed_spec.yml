@@ -28,7 +28,30 @@ cases:
         git add foo
         git commit -m "initial commit"
         echo bar > foo
-  params:
+  params: &author-params
     GIT_AUTHOR_EMAIL: test@example.com
     GIT_AUTHOR_NAME: Lesley
     GIT_COMMIT_MESSAGE: automated commit
+- when: there is an uncommitted change to both included and excluded files
+  it: # commits only the included file
+    exits: 0
+    has_outputs:
+    - name: output
+      for_which:
+      - { bash: cat file1, exits: 0, says: [updated] }
+      - { bash: cat file2, exits: 0, says: [original] }
+      - { bash: git status, exits: 0, says: ["nothing to commit, working tree clean"] }
+      - { bash: git show HEAD, exits: 0, says: ["Author: Lesley <test@example.com>", "automated commit"] }
+    has_inputs:
+    - name: input
+      setup: |
+        git init
+        echo original > file1
+        echo original > file2
+        git add file1 file2
+        git commit -m "initial commit"
+        echo updated > file1
+        echo updated > file2
+  params:
+    FILES: file1
+    <<: *author-params

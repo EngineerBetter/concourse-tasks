@@ -1,0 +1,15 @@
+---
+config: git-commit-if-changed.yml
+enclosed_in_input: { name: this, path_relative_to_spec: ../ }
+cases:
+- when: there is no change
+  it:
+    exits: 0
+    has_inputs:
+    - name: input
+      setup: |
+        git init
+        touch foo
+        git add foo
+        git commit -m "initial commit"
+

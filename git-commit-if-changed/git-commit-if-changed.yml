@@ -15,6 +15,7 @@ run:
   path: this/git-commit-if-changed/git-commit-if-changed.sh
 
 params:
+  FILES: "--"
   GIT_AUTHOR_NAME:
   GIT_AUTHOR_EMAIL:
   GIT_COMMIT_MESSAGE:

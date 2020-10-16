@@ -15,12 +15,11 @@ cases:
 
 - when: there is an uncommitted change
   it: # commits the change
-    exits: 0
     has_outputs:
     - name: output
       for_which:
-      - { bash: git status, exits: 0, says: ["nothing to commit, working tree clean"] }
-      - { bash: git show HEAD, exits: 0, says: ["Author: Lesley <test@example.com>", "automated commit"] }
+      - { bash: git status, says: ["nothing to commit, working tree clean"] }
+      - { bash: git show HEAD, says: ["Author: Lesley <test@example.com>", "automated commit"] }
     has_inputs:
     - name: input
       setup: |
@@ -36,12 +35,11 @@ cases:
 
 - when: there is an uncommitted change to both included and excluded files
   it: # commits only the included file
-    exits: 0
     has_outputs:
     - name: output
       for_which:
-      - { bash: cat file1, exits: 0, says: [updated] }
-      - { bash: cat file2, exits: 0, says: [original] }
+      - { bash: cat file1, says: [updated] }
+      - { bash: cat file2, says: [original] }
     has_inputs:
     - name: input
       setup: |

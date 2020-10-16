@@ -12,7 +12,7 @@ outputs:
   - name: output
 
 run:
-  path: this/git-commit-if-changed/git-commit-if-changed.sh
+  path: this/git-commit-if-changed/task.sh
 
 params:
   FILES: "--"

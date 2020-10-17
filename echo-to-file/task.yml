@@ -1,0 +1,18 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source: { repository: engineerbetter/pcf-ops }
+
+inputs:
+  - name: this
+
+outputs:
+  - name: output
+
+run:
+  path: this/echo-to-file/task.sh
+
+params:
+  FILENAME:
+  MESSAGE:

@@ -1,0 +1,26 @@
+---
+config: task.yml
+enclosed_in_input: { name: this, path_relative_to_spec: ../ }
+cases:
+- when: invoked
+  it: # writes $MESSAGE to $FILE
+    has_outputs:
+    - name: output
+      for_which: [ { bash: cat my-file, says: [ my-contents ] } ]
+  params:
+    FILENAME: my-file
+    MESSAGE: my-contents
+
+- when: FILENAME is not provided
+  it: # errors
+    exits: 1
+    says: [ FILENAME env var must be set and not empty ]
+  params:
+    MESSAGE: my-contents
+
+- when: MESSAGE is not provided
+  it: # errors
+    exits: 1
+    says: [ MESSAGE env var must be set and not empty ]
+  params:
+    FILENAME: my-file

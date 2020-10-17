@@ -70,15 +70,22 @@ jobs:
   - get: airfix
     passed: [test]
     trigger: true
+  - in_parallel:
+    - task: tar
+      file: airfix/tar/task.yml
+      params: { EXCLUDE: ci, TARBALL_NAME: airfix }
+      input_mapping: { this: airfix, input: airfix }
+      output_mapping: { output: tar }
+    - task: write-name
+      file: airfix/echo-to-file/task.yml
+      params: { FILENAME: name, MESSAGE: airfix }
+      input_mapping: { this: airfix }
+      output_mapping: { output: namefile }
   - put: version
     params:
       bump: patch
-  - task: write-name
-    file: airfix/echo-to-file/task.yml
-    params: { FILENAME: name, MESSAGE: airfix }
-    input_mapping: { this: airfix }
-    output_mapping: { output: namefile }
   - put: release
     params:
+      globs: [tar/airfix.tar.gz]
       name: namefile/name
       tag: version/version

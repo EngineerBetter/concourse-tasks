@@ -58,6 +58,7 @@ jobs:
           chmod +x /usr/local/bin/ironbird
 
           fly login -t eb -c https://ci.engineerbetter.com -u admin -p ((concourse_password))
+          fly -t eb sync
 
           cd airfix
 

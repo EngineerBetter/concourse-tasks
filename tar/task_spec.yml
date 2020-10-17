@@ -51,3 +51,19 @@ cases:
     TARBALL_EXTENSION: tgz
     TARBALL_NAME: my-tar
     VERSION_FILE: version
+
+- when: files are to be excluded
+  it: # excludes the files
+    has_outputs:
+    - name: output
+      for_which:
+      - bash: |
+          tar -xvf my-tar.tar.gz
+          stat nested-dir 2>&1
+        exits: 1
+        says: ["stat:.* No such file or directory"]
+    has_inputs:
+    - { name: input, from: fixtures/input }
+  params:
+    EXCLUDE: nested-dir
+    TARBALL_NAME: my-tar

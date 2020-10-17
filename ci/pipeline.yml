@@ -63,7 +63,7 @@ jobs:
           cd airfix
 
           pushd git-commit-if-changed
-            ironbird --specs task_spec.yml --target -eb
+            ironbird --specs task_spec.yml --target eb
           popd
     params:
       GIT_AUTHOR_EMAIL: default@example.com

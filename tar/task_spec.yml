@@ -67,3 +67,23 @@ cases:
   params:
     EXCLUDE: nested-dir
     TARBALL_NAME: my-tar
+
+- when: only certain files are to be included
+  it: # excludes the files
+    has_outputs:
+    - name: output
+      for_which:
+      - bash: |
+          tar -xvf my-tar.tar.gz
+          stat file 2>&1
+        exits: 1
+        says: ["stat:.* No such file or directory"]
+      - bash: |
+          ls
+        exits: 0
+        says: ["file2", "file3"]
+    has_inputs:
+    - { name: input, from: fixtures/input }
+  params:
+    INCLUDE: file2 file3
+    TARBALL_NAME: my-tar

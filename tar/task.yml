@@ -18,6 +18,7 @@ run:
 
 params:
   EXCLUDE:
+  INCLUDE: .
   TARBALL_EXTENSION:
   TARBALL_NAME:
   VERSION_FILE:

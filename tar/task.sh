@@ -25,7 +25,7 @@ fi
 set -u
 
 pushd input
-  tar czvpf ../"${FULL_TARBALL_NAME}" --exclude="${EXCLUDE}" .
+  tar czvpf ../"${FULL_TARBALL_NAME}" --exclude="${EXCLUDE}" $INCLUDE
 popd
 
 mv "${FULL_TARBALL_NAME}" output/

@@ -62,9 +62,7 @@ jobs:
 
           cd airfix
 
-          pushd git-commit-if-changed
-            ironbird --specs task_spec.yml --target eb
-          popd
+          find * -iname '*_spec.yml' -exec ironbird --specs {} --target eb \;
 
 - name: release
   serial: true

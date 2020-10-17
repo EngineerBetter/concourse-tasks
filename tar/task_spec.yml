@@ -1,0 +1,53 @@
+---
+config: task.yml
+enclosed_in_input: { name: this, path_relative_to_spec: ../ }
+cases:
+- when: no extension is provided
+  it: # defaults to .tar.gz
+    has_outputs:
+    - name: output
+      for_which:
+      - { bash: ls, says: [my-tar.tar.gz]}
+    has_inputs: [{ name: input, from: fixtures/input }]
+  params:
+    TARBALL_NAME: my-tar
+
+- when: invoked
+  it: # tars the input
+    has_outputs:
+    - name: output
+      for_which:
+      -
+        bash: |
+          tar -xvf my-tar.tar.gz
+          cat file
+          cat nested-dir/other-file
+        says: [contents, other-contents]
+    has_inputs: [{ name: input, from: fixtures/input }]
+  params:
+    TARBALL_NAME: my-tar
+
+- when: an extension is provided
+  it: # writes the tarball with the extension
+    has_outputs:
+    - name: output
+      for_which:
+      - { bash: ls, says: [my-tar.tgz]}
+    has_inputs: [{ name: input, from: fixtures/input }]
+  params:
+    TARBALL_EXTENSION: tgz
+    TARBALL_NAME: my-tar
+
+- when: an version file is provided
+  it: # writes the tarball with the version
+    has_outputs:
+    - name: output
+      for_which:
+      - { bash: ls, says: [my-tar-1.2.3.tgz]}
+    has_inputs:
+    - { name: input, from: fixtures/input }
+    - { name: version, from: fixtures/version }
+  params:
+    TARBALL_EXTENSION: tgz
+    TARBALL_NAME: my-tar
+    VERSION_FILE: version

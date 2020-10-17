@@ -1,0 +1,22 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source: { repository: engineerbetter/pcf-ops }
+
+inputs:
+  - name: this
+  - name: input
+  - name: version
+    optional: true
+
+outputs:
+  - name: output
+
+run:
+  path: this/tar/task.sh
+
+params:
+  TARBALL_EXTENSION:
+  TARBALL_NAME:
+  VERSION_FILE:

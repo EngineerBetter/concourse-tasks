@@ -76,6 +76,7 @@ jobs:
   - task: write-name
     file: airfix/echo-to-file/task.yml
     params: { FILENAME: name, MESSAGE: airfix }
+    input_mapping: { this: airfix }
     output_mapping: { output: namefile }
   - put: release
     params:

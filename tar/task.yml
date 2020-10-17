@@ -17,6 +17,7 @@ run:
   path: this/tar/task.sh
 
 params:
+  EXCLUDE:
   TARBALL_EXTENSION:
   TARBALL_NAME:
   VERSION_FILE:

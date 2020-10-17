@@ -73,7 +73,11 @@ jobs:
   - put: version
     params:
       bump: patch
+  - task: write-name
+    file: airfix/echo-to-file/task.yml
+    params: { FILENAME: name, MESSAGE: airfix }
+    output_mapping: { output: namefile }
   - put: release
     params:
-      name: built/name
+      name: namefile/name
       tag: version/version

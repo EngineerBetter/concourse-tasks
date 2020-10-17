@@ -8,6 +8,8 @@ cases:
     has_inputs:
     - name: input
       setup: |
+        git config --global user.email "setup@example.com"
+        git config --global user.name "Setup"
         git init
         touch foo
         git add foo
@@ -23,6 +25,8 @@ cases:
     has_inputs:
     - name: input
       setup: |
+        git config --global user.email "setup@example.com"
+        git config --global user.name "Setup"
         git init
         touch foo
         git add foo
@@ -43,6 +47,8 @@ cases:
     has_inputs:
     - name: input
       setup: |
+        git config --global user.email "setup@example.com"
+        git config --global user.name "Setup"
         git init
         echo original > file1
         echo original > file2

@@ -48,3 +48,20 @@ cases:
       for_which:
       - { bash: cat file-1.txt, says: ["some overwritten content"] }
       - { bash: cat subdirectory/file-1.txt, says: ["some sub-content: 1"] }
+- when: given a glob to match in a src directory
+  it: # should only copy files matching the glob
+    has_inputs:
+    - name: src-1
+      from: fixtures/src-1
+    - name: src-2
+      from: fixtures/src-2
+    exits: 0
+    has_outputs:
+    - name: target
+      for_which:
+      - { bash: ls file-1.txt, exits: 1, says: ["ls: file-1.txt: No such file or directory"] }
+      - { bash: cat subdirectory/file-1.txt, says: ["some sub-content: 1"] }
+      - { bash: cat file-2.txt, says: ["some content: 2"] }
+      - { bash: cat subdirectory/file-2.txt, says: ["some sub-content: 2"] }
+  params:
+    SRC_1_GLOB: "subdirectory/*"

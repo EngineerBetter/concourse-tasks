@@ -1,0 +1,41 @@
+---
+config: task.yml
+cases:
+- when: invoked without any ytt templates
+  it: # renders all templates to output
+    has_inputs:
+    - name: templates
+      setup: &setup |
+        cat > template-1.yml <<EOF
+        #@ var1 = "value1"
+        key1: #@ var1
+        EOF
+        cat > template-2.yml <<EOF
+        #@ var2 = "value2"
+        key2: #@ var2
+        EOF
+    exits: 0
+    has_outputs:
+    - name: rendered
+      for_which:
+      - bash: cat rendered.yml
+        says:
+        - |
+          key1: value1
+          ---
+          key2: value2
+- when: invoked with specific ytt templates
+  it: # renders specific templates to output
+    has_inputs:
+    - name: templates
+      setup: *setup
+    exits: 0
+    has_outputs:
+    - name: rendered
+      for_which:
+      - bash: cat rendered.yml
+        says:
+        - |
+          key1: value1
+  params:
+    TEMPLATES: template-1.yml

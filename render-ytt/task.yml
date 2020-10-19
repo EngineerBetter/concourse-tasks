@@ -1,0 +1,29 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source: { repository: gerritk/ytt }
+
+inputs:
+- name: templates
+
+outputs:
+- name: rendered
+
+run:
+  path: ash
+  args:
+  - -c
+  - |
+    if [[ -z "$TEMPLATES" ]]; then
+      templates="-f templates/"
+    else
+      templates=""
+      for tmpl in ${TEMPLATES//,/ }; do
+        templates="$templates -f templates/$tmpl"
+      done
+    fi
+    ytt $templates > rendered/rendered.yml
+
+params:
+  TEMPLATES:

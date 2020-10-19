@@ -1,0 +1,33 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source: { repository: alpine }
+
+inputs:
+- name: src-1
+- name: src-2
+- name: src-3
+  optional: true
+- name: src-4
+  optional: true
+- name: src-5
+  optional: true
+- name: src-6
+  optional: true
+- name: src-7
+  optional: true
+- name: src-8
+  optional: true
+
+outputs:
+- name: target
+
+run:
+  path: ash
+  args:
+  - -c
+  - |
+    for src in src-*; do
+      cp -r $src/* target/
+    done

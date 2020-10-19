@@ -39,3 +39,11 @@ cases:
           key1: value1
   params:
     TEMPLATES: template-1.yml
+- when: invoked with missing ytt templates
+  it: # exits with a non-zero status code
+    has_inputs:
+    - name: templates
+      setup: *setup
+    exits: 1
+  params:
+    TEMPLATES: template-3.yml

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ash
 
 set -euxo pipefail
 
@@ -10,20 +10,20 @@ else
   add_flag="${FILES}"
 fi
 
-pushd input
-  # Display changed files for debugging
-  git status
-  git diff-index HEAD ${FILES}
+cd input
+# Display changed files for debugging
+git status
+git diff-index HEAD ${FILES}
 
-  # Only commit if the files changed
-  if ! git diff-index --quiet HEAD; then
-    git add $add_flag
+# Only commit if the files changed
+if ! git diff-index --quiet HEAD; then
+  git add $add_flag
 
-    git config --global user.email "${GIT_AUTHOR_EMAIL}"
-    git config --global user.name "${GIT_AUTHOR_NAME}"
+  git config --global user.email "${GIT_AUTHOR_EMAIL}"
+  git config --global user.name "${GIT_AUTHOR_NAME}"
 
-    git commit -m "${GIT_COMMIT_MESSAGE}"
-  fi
-popd
+  git commit -m "${GIT_COMMIT_MESSAGE}"
+fi
+cd ..
 
 git clone ./input ./output

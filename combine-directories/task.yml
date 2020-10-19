@@ -2,7 +2,7 @@
 platform: linux
 image_resource:
   type: registry-image
-  source: { repository: alpine }
+  source: { repository: eeacms/rsync }
 
 inputs:
 - name: src-1
@@ -29,5 +29,21 @@ run:
   - -c
   - |
     for src in src-*; do
-      cp -r $src/* target/
+      glob_var="SRC_${src/src-}_GLOB"
+      glob="$(eval echo \$$glob_var)"
+      if [[ -n "$glob" ]]; then
+        rsync -rR --include='*/' --include=$glob --exclude='*' $src/./ target/
+      else
+        rsync -rR $src/./ target/
+      fi
     done
+
+params:
+  SRC_1_GLOB:
+  SRC_2_GLOB:
+  SRC_3_GLOB:
+  SRC_4_GLOB:
+  SRC_5_GLOB:
+  SRC_6_GLOB:
+  SRC_7_GLOB:
+  SRC_8_GLOB:

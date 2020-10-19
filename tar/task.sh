@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/ash
 
 set -eo pipefail
 
@@ -24,8 +24,8 @@ fi
 
 set -u
 
-pushd input
-  tar czvpf ../"${FULL_TARBALL_NAME}" --exclude="${EXCLUDE}" $INCLUDE
-popd
+cd input
+tar czvpf ../"${FULL_TARBALL_NAME}" --exclude="${EXCLUDE}" $INCLUDE
+cd ..
 
 mv "${FULL_TARBALL_NAME}" output/

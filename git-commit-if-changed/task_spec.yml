@@ -1,6 +1,5 @@
 ---
 config: task.yml
-enclosed_in_input: { name: this, path_relative_to_spec: ../ }
 cases:
 - when: there is no change
   it:

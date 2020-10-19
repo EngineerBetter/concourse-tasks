@@ -4,14 +4,21 @@ image_resource:
   type: registry-image
   source: { repository: engineerbetter/pcf-ops }
 
-inputs:
-  - name: this
-
 outputs:
-  - name: output
+- name: output
 
 run:
-  path: this/echo-to-file/task.sh
+  path: bash
+  args:
+  - -euo
+  - pipefail
+  - -c
+  - |
+    : "${FILENAME:?FILENAME env var must be set and not empty}"
+    : "${MESSAGE:?MESSAGE env var must be set and not empty}"
+
+    cd output
+    echo "${MESSAGE}" > "${FILENAME}"
 
 params:
   FILENAME:

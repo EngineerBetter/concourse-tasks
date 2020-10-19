@@ -1,0 +1,50 @@
+---
+config: task.yml
+cases:
+- when: provided with 2 inputs
+  it: # merges src directories into the target
+    has_inputs:
+    - name: src-1
+      from: fixtures/src-1
+    - name: src-2
+      from: fixtures/src-2
+    exits: 0
+    has_outputs:
+    - name: target
+      for_which:
+      - { bash: cat file-1.txt, says: ["some content: 1"] }
+      - { bash: cat subdirectory/file-1.txt, says: ["some sub-content: 1"] }
+      - { bash: cat file-2.txt, says: ["some content: 2"] }
+      - { bash: cat subdirectory/file-2.txt, says: ["some sub-content: 2"] }
+- when: provided with optional third input
+  it: # merges src directories into the target
+    has_inputs:
+    - name: src-1
+      from: fixtures/src-1
+    - name: src-2
+      from: fixtures/src-2
+    - name: src-3
+      from: fixtures/src-3
+    exits: 0
+    has_outputs:
+    - name: target
+      for_which:
+      - { bash: cat file-1.txt, says: ["some content: 1"] }
+      - { bash: cat subdirectory/file-1.txt, says: ["some sub-content: 1"] }
+      - { bash: cat file-2.txt, says: ["some content: 2"] }
+      - { bash: cat subdirectory/file-2.txt, says: ["some sub-content: 2"] }
+      - { bash: cat file-3.txt, says: ["some content: 3"] }
+      - { bash: cat subdirectory/file-3.txt, says: ["some sub-content: 3"] }
+- when: given a directory containing files of the same name
+  it: # should overwrite earlier src directories with contents of later ones
+    has_inputs:
+    - name: src-1
+      from: fixtures/src-1
+    - name: src-2
+      from: fixtures/overwrite
+    exits: 0
+    has_outputs:
+    - name: target
+      for_which:
+      - { bash: cat file-1.txt, says: ["some overwritten content"] }
+      - { bash: cat subdirectory/file-1.txt, says: ["some sub-content: 1"] }

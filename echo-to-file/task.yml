@@ -2,13 +2,13 @@
 platform: linux
 image_resource:
   type: registry-image
-  source: { repository: engineerbetter/pcf-ops }
+  source: { repository: alpine }
 
 outputs:
 - name: output
 
 run:
-  path: bash
+  path: ash
   args:
   - -euo
   - pipefail
@@ -17,8 +17,7 @@ run:
     : "${FILENAME:?FILENAME env var must be set and not empty}"
     : "${MESSAGE:?MESSAGE env var must be set and not empty}"
 
-    cd output
-    echo "${MESSAGE}" > "${FILENAME}"
+    echo "$MESSAGE" > "output/$FILENAME"
 
 params:
   FILENAME:

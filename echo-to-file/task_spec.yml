@@ -12,14 +12,14 @@ cases:
 
 - when: FILENAME is not provided
   it: # errors
-    exits: 1
+    exits: 2
     says: [ FILENAME env var must be set and not empty ]
   params:
     MESSAGE: my-contents
 
 - when: MESSAGE is not provided
   it: # errors
-    exits: 1
+    exits: 2
     says: [ MESSAGE env var must be set and not empty ]
   params:
     FILENAME: my-file

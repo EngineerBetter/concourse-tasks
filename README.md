@@ -7,7 +7,7 @@ A versioned catalogue of re-usable and tested Concourse tasks.
 Include the following resource in the pipeline where you wish to consume a task:
 
 ```yaml
-- name: airfix
+- name: concourse-tasks
   type: git
   source:
     uri: https://github.com/EngineerBetter/concourse-tasks.git

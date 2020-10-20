@@ -78,7 +78,6 @@ jobs:
     - task: write-name
       file: concourse-tasks/echo-to-file/task.yml
       params: { FILENAME: name, MESSAGE: concourse-tasks }
-      input_mapping: { this: concourse-tasks }
       output_mapping: { output: namefile }
   - put: version
     params:

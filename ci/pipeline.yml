@@ -74,7 +74,6 @@ jobs:
     - task: tar
       file: concourse-tasks/tar/task.yml
       params: { EXCLUDE: ci, TARBALL_NAME: concourse-tasks }
-      input_mapping: { this: concourse-tasks, input: concourse-tasks }
       output_mapping: { output: tar }
     - task: write-name
       file: concourse-tasks/echo-to-file/task.yml

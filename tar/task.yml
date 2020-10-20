@@ -5,7 +5,7 @@ image_resource:
   source: { repository: alpine }
 
 inputs:
-  - name: this
+  - name: concourse-tasks
   - name: input
   - name: version
     optional: true
@@ -14,7 +14,7 @@ outputs:
   - name: output
 
 run:
-  path: this/tar/task.sh
+  path: concourse-tasks/tar/task.sh
 
 params:
   EXCLUDE:

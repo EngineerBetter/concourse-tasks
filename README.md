@@ -50,5 +50,5 @@ Contributions are very welcome!
 1. Create your task in a descriptive directory name. No cute aeronautical puns, please.
 1. Place your task config as a file called `task.yml` in your task's directory
 1. Consider using the smallest image possible for your task.
-1. When invoking a shell, consider in-lining your script as an argument to the shell executable in your `task.yml`
+1. When invoking a shell, consider [in-lining your script as an argument to the shell executable in your `task.yml` (see example)](https://github.com/EngineerBetter/concourse-tasks/blob/main/git-commit-if-changed/task.yml#L13-L33)
 1. Please provide an [ironbird test spec](https://github.com/EngineerBetter/ironbird) in your directory, with a name ending in `_spec.yml`. PRs featuring untested tasks will not be merged.

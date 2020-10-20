@@ -57,12 +57,12 @@ jobs:
           curl -L https://github.com/EngineerBetter/ironbird/releases/download/0.0.6/ironbird-linux -o /usr/local/bin/ironbird
           chmod +x /usr/local/bin/ironbird
 
-          fly login -t eb -c https://ci.engineerbetter.com -u admin -p ((concourse_password))
-          fly -t eb sync
+          fly login -t this -c ((concourse_url)) -u ((concourse_username)) -p ((concourse_password))
+          fly -t this sync
 
           cd concourse-tasks
 
-          find * -iname '*_spec.yml' -exec ironbird --specs {} --target eb \;
+          find * -iname '*_spec.yml' -exec ironbird --specs {} --target this \;
 
 - name: release
   serial: true

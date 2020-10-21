@@ -17,8 +17,16 @@ run:
     : "${FILENAME:?FILENAME env var must be set and not empty}"
     : "${MESSAGE:?MESSAGE env var must be set and not empty}"
 
+    log_msg=$(if test "$REDACT_LOGS" == "true"; then echo "<REDACTED>"; else echo "$MESSAGE"; fi)
+    cat <<EOF
+    WRITING:
+    $log_msg
+    TO: output/$FILENAME
+    EOF
+
     echo "$MESSAGE" > "output/$FILENAME"
 
 params:
   FILENAME:
   MESSAGE:
+  REDACT_LOGS: false

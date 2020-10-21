@@ -2,13 +2,31 @@
 config: task.yml
 cases:
 - when: invoked
-  it: # writes $MESSAGE to $FILE
+  it: # writes $MESSAGE to $FILE and logs content
+    says:
+    - "WRITING:"
+    - "my-contents"
+    - "TO: output/my-file"
     has_outputs:
     - name: output
       for_which: [ { bash: cat my-file, says: [ my-contents ] } ]
   params:
     FILENAME: my-file
     MESSAGE: my-contents
+
+- when: invoked with REDACT_LOGS=true
+  it: # writes $MESSAGE to $FILE and redacts logs
+    says:
+    - "WRITING:"
+    - "<REDACTED>"
+    - "TO: output/my-file"
+    has_outputs:
+    - name: output
+      for_which: [ { bash: cat my-file, says: [ my-contents ] } ]
+  params:
+    FILENAME: my-file
+    MESSAGE: my-contents
+    REDACT_LOGS: true
 
 - when: FILENAME is not provided
   it: # errors

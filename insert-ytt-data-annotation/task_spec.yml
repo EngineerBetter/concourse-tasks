@@ -6,44 +6,37 @@ cases:
     exits: 0
     has_inputs: &setup
     - name: input-data
-      setup: |
-        cat > convert-me.yml <<EOF
-        foo: bar
-        EOF
+      from: fixtures
     says:
-    - "Adding ytt data annotation to input-data/convert-me.yml"
-    - "Wrote data file with ytt data annotation to output-data/convert-me.yml"
+    - "Adding ytt data annotation to input-data/normal.yml"
+    - "Wrote data file with ytt data annotation to output-data/normal.yml"
     has_outputs:
     - name: output-data
       for_which:
-      - bash: cat convert-me.yml
+      - bash: cat normal.yml
         says:
         - "#@data/values"
         - "---"
         - "foo: bar"
   params:
-    DATA_FILE: convert-me.yml
+    DATA_FILE: normal.yml
 
 - when: invoked with a whole yaml document
   it: # writes $DATA_FILE to output with annotation and only one document separator
     exits: 0
-    has_inputs:
+    has_inputs: &setup
     - name: input-data
-      setup: |
-        cat > convert-me.yml <<EOF
-        ---
-        foo: bar
-        EOF
+      from: fixtures
     says:
-    - "Adding ytt data annotation to input-data/convert-me.yml"
-    - "Wrote data file with ytt data annotation to output-data/convert-me.yml"
+    - "Adding ytt data annotation to input-data/with-doc-separator.yml"
+    - "Wrote data file with ytt data annotation to output-data/with-doc-separator.yml"
     has_outputs:
     - name: output-data
       for_which:
-      - bash: "grep -c -- '---' convert-me.yml"
+      - bash: "grep -c -- '---' with-doc-separator.yml"
         says: [1]
   params:
-    DATA_FILE: convert-me.yml
+    DATA_FILE: with-doc-separator.yml
 
 - when: DATA_FILE is not provided
   it: # errors

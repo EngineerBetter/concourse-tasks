@@ -1,0 +1,39 @@
+---
+config: task.yml
+cases:
+- when: invoked
+  it: # writes $DATA_FILE to output with annotation
+    exits: 0
+    has_inputs: &setup
+    - name: input-data
+      setup: |
+        cat > convert-me.yml <<EOF
+        foo: bar
+        EOF
+    says:
+    - "Adding ytt data annotation to input-data/convert-me.yml"
+    - "Wrote data file with ytt data annotation to output-data/convert-me.yml"
+    has_outputs:
+    - name: output-data
+      for_which:
+      - bash: cat convert-me.yml
+        says:
+        - "#@data/values"
+        - "---"
+        - "foo: bar"
+  params:
+    DATA_FILE: convert-me.yml
+
+- when: DATA_FILE is not provided
+  it: # errors
+    has_inputs: *setup
+    exits: 2
+    says: [ DATA_FILE env var must be set and not empty ]
+
+- when: DATA_FILE is not a valid file in input-data
+  it: # errors
+    has_inputs: *setup
+    exits: 1
+    says: [ "Could not find 'convert-meeeee.yml' in input-data"]
+  params:
+    DATA_FILE: convert-meeeee.yml

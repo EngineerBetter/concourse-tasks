@@ -1,0 +1,30 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source: { repository: alpine }
+
+inputs:
+- name: input-data
+outputs:
+- name: output-data
+
+run:
+  path: ash
+  args:
+  - -euo
+  - pipefail
+  - -c
+  - |
+    : "${DATA_FILE:?DATA_FILE env var must be set and not empty}"
+    if ! test -f input-data/$DATA_FILE; then printf "Could not find '$DATA_FILE' in input-data\n" && exit 1; fi
+    printf "Adding ytt data annotation to input-data/$DATA_FILE\n"
+    cat <<EOF > "output-data/$DATA_FILE"
+    #@data/values
+    ---
+    $(cat input-data/$DATA_FILE)
+    EOF
+    printf "Wrote data file with ytt data annotation to output-data/$DATA_FILE\n"
+
+params:
+  DATA_FILE:

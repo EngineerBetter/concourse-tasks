@@ -24,6 +24,27 @@ cases:
   params:
     DATA_FILE: convert-me.yml
 
+- when: invoked with a whole yaml document
+  it: # writes $DATA_FILE to output with annotation and only one document separator
+    exits: 0
+    has_inputs:
+    - name: input-data
+      setup: |
+        cat > convert-me.yml <<EOF
+        ---
+        foo: bar
+        EOF
+    says:
+    - "Adding ytt data annotation to input-data/convert-me.yml"
+    - "Wrote data file with ytt data annotation to output-data/convert-me.yml"
+    has_outputs:
+    - name: output-data
+      for_which:
+      - bash: "grep -c -- '---' convert-me.yml"
+        says: [1]
+  params:
+    DATA_FILE: convert-me.yml
+
 - when: DATA_FILE is not provided
   it: # errors
     has_inputs: *setup

@@ -2,7 +2,7 @@
 platform: linux
 image_resource:
   type: registry-image
-  source: { repository: alpine }
+  source: { repository: mikefarah/yq }
 
 inputs:
 - name: input-data
@@ -22,7 +22,7 @@ run:
     cat <<EOF > "output-data/$DATA_FILE"
     #@data/values
     ---
-    $(cat input-data/$DATA_FILE)
+    $(yq r input-data/$DATA_FILE -P)
     EOF
     printf "Wrote data file with ytt data annotation to output-data/$DATA_FILE\n"
 

@@ -1,7 +1,7 @@
 ---
 config: task.yml
 cases:
-- when: invoked
+- when: invoked with a normal yaml document
   it: # writes $DATA_FILE to output with annotation
     exits: 0
     has_inputs: &setup
@@ -37,6 +37,26 @@ cases:
         says: [1]
   params:
     DATA_FILE: with-doc-separator.yml
+
+- when: invoked with a normal json document
+  it: # writes $DATA_FILE to output with annotation as yaml file
+    exits: 0
+    has_inputs: &setup
+    - name: input-data
+      from: fixtures
+    says:
+    - "Adding ytt data annotation to input-data/normal.json"
+    - "Wrote data file with ytt data annotation to output-data/normal.yml"
+    has_outputs:
+    - name: output-data
+      for_which:
+      - bash: cat normal.yml
+        says:
+        - "#@data/values"
+        - "---"
+        - "foo: bar"
+  params:
+    DATA_FILE: normal.json
 
 - when: DATA_FILE is not provided
   it: # errors

@@ -19,12 +19,13 @@ run:
     : "${DATA_FILE:?DATA_FILE env var must be set and not empty}"
     if ! test -f input-data/$DATA_FILE; then printf "Could not find '$DATA_FILE' in input-data\n" && exit 1; fi
     printf "Adding ytt data annotation to input-data/$DATA_FILE\n"
-    cat <<EOF > "output-data/$DATA_FILE"
+    output_file="output-data/${DATA_FILE%.*}.yml"
+    cat <<EOF > "$output_file"
     #@data/values
     ---
     $(yq r input-data/$DATA_FILE -P)
     EOF
-    printf "Wrote data file with ytt data annotation to output-data/$DATA_FILE\n"
+    printf "Wrote data file with ytt data annotation to $output_file\n"
 
 params:
   DATA_FILE:

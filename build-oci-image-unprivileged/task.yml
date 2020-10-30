@@ -1,0 +1,28 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: gcr.io/kaniko-project/executor
+    tag: debug
+
+inputs:
+- name: dockerfile-repo
+
+outputs:
+- name: image
+
+run:
+  path: /busybox/sh
+  args:
+  - -c
+  - |
+    /kaniko/executor \
+    --no-push \
+    --context=dir://dockerfile-repo \
+    --tarPath=./image/image.tar \
+    --destination=${IMAGE_NAME}:${TAG}
+
+params:
+  IMAGE_NAME:
+  TAG:

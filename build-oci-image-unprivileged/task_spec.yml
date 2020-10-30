@@ -1,0 +1,18 @@
+---
+config: task.yml
+cases:
+- when: run
+  within: 1m
+  it: # builds an OCI image in an unprivileged step
+    exits: 0
+    has_inputs:
+    - name: dockerfile-repo
+      from: fixtures/example-dockerfile
+    has_outputs:
+    - name: image
+      for_which:
+      - { bash: ls image.tar, exits: 0 }
+      - { bash: docker load --input image.tar, exits: 0, says: ["Loaded image"] }
+  params:
+    IMAGE_NAME: my-image
+    TAG: 1.0

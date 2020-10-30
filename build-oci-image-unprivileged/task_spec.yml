@@ -1,18 +1,83 @@
 ---
 config: task.yml
 cases:
-- when: run
-  within: 1m
-  it: # builds an OCI image in an unprivileged step
+- when: specifying a build stage target
+  it: # succeeds
     exits: 0
+    says: ["succeeded"]
     has_inputs:
     - name: dockerfile-repo
-      from: fixtures/example-dockerfile
+      from: fixtures/example-dockerfiles
     has_outputs:
     - name: image
       for_which:
       - { bash: ls image.tar, exits: 0 }
-      - { bash: docker load --input image.tar, exits: 0, says: ["Loaded image"] }
+      - { bash: tar -xf image.tar, exits: 0 }
   params:
     IMAGE_NAME: my-image
     TAG: 1.0
+    TARGET: stage-1
+
+- when: using a build stage target not in the Dockerfile
+  it: # errors
+    exits: 1
+    says: ["not a valid target"]
+    has_inputs:
+    - name: dockerfile-repo
+      from: fixtures/example-dockerfiles
+  params:
+    IMAGE_NAME: my-image
+    TAG: 1.0
+    TARGET: wrong-target
+
+- when: specifying a context and Dockerfile name explicitly
+  it: # succeeds
+    exits: 0
+    says: ["succeeded"]
+    has_inputs:
+    - name: dockerfile-repo
+      from: fixtures/example-dockerfiles
+  params:
+    CONTEXT: "dockerfile-repo/nested-directory"
+    DOCKERFILE: OtherDockerfile
+    IMAGE_NAME: my-image
+    TAG: 1.0
+
+- when: giving an incorrect Dockerfile name
+  it: # errors
+    exits: 1
+    says: ["error resolving dockerfile path"]
+    has_inputs:
+    - name: dockerfile-repo
+      from: fixtures/example-dockerfiles
+  params:
+    DOCKERFILE: Dockerfileeee
+    IMAGE_NAME: my-image
+    TAG: 1.0
+
+- when: passing mandatory args to a Dockerfile
+  it: # succeeds
+    exits: 0
+    says: ["succeeded"]
+    has_inputs:
+    - name: dockerfile-repo
+      from: fixtures/example-dockerfiles
+  params:
+    IMAGE_NAME: my-image
+    TAG: 1.0
+    CONTEXT: "dockerfile-repo/mandatory-arg"
+    BUILD_ARGS: MANDATORY_ARG=lalalalalala,OTHER_ARG=hey
+    DOCKERFILE: Dockerfile
+
+- when: not passing a mandatory arg to a Dockerfile
+  it: # fails
+    exits: 1
+    says: ["error building image"]
+    has_inputs:
+    - name: dockerfile-repo
+      from: fixtures/example-dockerfiles
+  params:
+    IMAGE_NAME: my-image
+    TAG: 1.0
+    CONTEXT: "dockerfile-repo/mandatory-arg"
+    DOCKERFILE: Dockerfile

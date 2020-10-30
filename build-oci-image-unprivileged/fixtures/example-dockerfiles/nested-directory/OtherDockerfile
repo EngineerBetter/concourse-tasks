@@ -1,0 +1,4 @@
+FROM alpine
+ARG MESSAGE
+RUN echo $MESSAGE > test-file
+ENTRYPOINT ["cat", "test-file"]

@@ -2,6 +2,7 @@
 config: task.yml
 cases:
 - when: specifying a build stage target
+  within: 1m
   it: # succeeds
     exits: 0
     says: ["succeeded"]

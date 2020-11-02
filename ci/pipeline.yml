@@ -54,7 +54,7 @@ jobs:
         args:
         - -xeuc
         - |
-          curl -L https://github.com/EngineerBetter/ironbird/releases/download/0.0.6/ironbird-linux -o /usr/local/bin/ironbird
+          curl -L https://github.com/EngineerBetter/ironbird/releases/download/0.0.9/ironbird-linux -o /usr/local/bin/ironbird
           chmod +x /usr/local/bin/ironbird
 
           fly login -t this -c ((concourse_url)) -u ((concourse_username)) -p ((concourse_password))

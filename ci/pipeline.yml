@@ -62,7 +62,11 @@ jobs:
 
           cd concourse-tasks
 
-          find * -iname '*_spec.yml' -exec ironbird --target this --specs {} +
+          shopt -s globstar
+          specs=( **/*_spec.yml )
+          shopt -u globstar
+          IFS=, eval 'csv="${specs[*]}"'
+          ironbird --target this --specs "${csv}"
 
 - name: release
   serial: true

@@ -59,7 +59,7 @@ cases:
     has_outputs:
     - name: target
       for_which:
-      - { bash: ls file-1.txt, exits: 1, says: ["ls: file-1.txt: No such file or directory"] }
+      - { bash: ls file-1.txt, exits: 2, says: ["No such file or directory"] }
       - { bash: cat subdirectory/file-1.txt, says: ["some sub-content: 1"] }
       - { bash: cat file-2.txt, says: ["some content: 2"] }
       - { bash: cat subdirectory/file-2.txt, says: ["some sub-content: 2"] }

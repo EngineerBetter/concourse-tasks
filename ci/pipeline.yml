@@ -62,7 +62,7 @@ jobs:
 
           cd concourse-tasks
 
-          find * -iname '*_spec.yml' -exec ironbird --specs {} --target this \;
+          find * -iname '*_spec.yml' -exec ironbird --target this --specs {} +
 
 - name: release
   serial: true

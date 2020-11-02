@@ -1,6 +1,6 @@
 ---
 config: task.yml
-enclosed_in_input: { name: this, path_relative_to_spec: ../ }
+enclosed_in_input: { name: concourse-tasks, path_relative_to_spec: ../ }
 cases:
 - when: no extension is provided
   it: # defaults to .tar.gz

@@ -7,9 +7,9 @@ cases:
     has_inputs:
     - name: input
       setup: |
-        git config --global user.email "setup@example.com"
-        git config --global user.name "Setup"
         git init
+        git config --local user.email "setup@example.com"
+        git config --local user.name "Setup"
         touch foo
         git add foo
         git commit -m "initial commit"
@@ -24,9 +24,9 @@ cases:
     has_inputs:
     - name: input
       setup: |
-        git config --global user.email "setup@example.com"
-        git config --global user.name "Setup"
         git init
+        git config --local user.email "setup@example.com"
+        git config --local user.name "Setup"
         touch foo
         git add foo
         git commit -m "initial commit"
@@ -46,9 +46,9 @@ cases:
     has_inputs:
     - name: input
       setup: |
-        git config --global user.email "setup@example.com"
-        git config --global user.name "Setup"
         git init
+        git config --local user.email "setup@example.com"
+        git config --local user.name "Setup"
         echo original > file1
         echo original > file2
         git add file1 file2

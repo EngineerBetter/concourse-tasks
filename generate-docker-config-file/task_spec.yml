@@ -1,0 +1,41 @@
+---
+config: task.yml
+cases:
+- when: invoked
+  it: # writes docker auth to docker_creds/config.json
+    says:
+    - "Wrote auth to docker_creds/config.json"
+    has_outputs:
+    - name: docker_creds
+      for_which:
+      - bash: cat config.json
+        says:
+        - '{ "auths": { "https://index.docker.io/v1/": { "auth": "dXNlcm5hbWU6cGFzc3dvcmQ=", "email": "myemail@mydomain.com" } } }'
+  params:
+    USERNAME: username
+    PASSWORD: password
+    EMAIL: myemail@mydomain.com
+
+- when: USERNAME is not provided
+  it: # errors
+    exits: 2
+    says: [ USERNAME param must be set and not empty ]
+  params:
+    PASSWORD: password
+    EMAIL: myemail@mydomain.com
+
+- when: PASSWORD is not provided
+  it: # errors
+    exits: 2
+    says: [ PASSWORD param must be set and not empty ]
+  params:
+    USERNAME: username
+    EMAIL: myemail@mydomain.com
+
+- when: EMAIL is not provided
+  it: # errors
+    exits: 2
+    says: [ EMAIL param must be set and not empty ]
+  params:
+    USERNAME: username
+    PASSWORD: password

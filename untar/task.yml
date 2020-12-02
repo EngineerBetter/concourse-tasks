@@ -1,0 +1,24 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source: { repository: alpine }
+
+inputs:
+  - name: concourse-tasks
+  - name: input
+
+outputs:
+  - name: output
+
+run:
+  path: ash
+  args:
+  - -c
+  - |
+    set -euo pipefail
+    : "${TARBALL_PATH:?TARBALL_PATH env var must be provided, path inside input to tarball}"
+    tar -xvf input/${TARBALL_PATH} -C output/
+
+params:
+  TARBALL_PATH:

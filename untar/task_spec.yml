@@ -1,0 +1,32 @@
+---
+config: task.yml
+enclosed_in_input: { name: concourse-tasks, path_relative_to_spec: ../ }
+cases:
+- when: a valid tar is provided
+  it: # unpacks the contents
+    <<: &has_outputs
+      has_outputs:
+      - name: output
+        for_which:
+        - { bash: ls, says: [my-dir, outer-file]}
+        - { bash: ls my-dir, says: [inner-file]}
+    <<: &has_inputs
+      has_inputs:
+      - name: input
+        setup: |
+          mkdir my-dir
+          touch outer-file my-dir/inner-file
+          tar czvpf tarball.tgz .
+  params:
+    TARBALL_PATH: tarball.tgz
+- when: a glob is provided
+  it: # unpacks the contents
+    <<: *has_outputs
+    <<: *has_inputs
+  params:
+    TARBALL_PATH: tar*.tgz
+- when: no tarball path is provided
+  it:
+    exits: 2
+    says: ["TARBALL_PATH env var must be provided, path inside input to tarball"]
+    <<: *has_inputs

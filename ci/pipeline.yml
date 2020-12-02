@@ -48,6 +48,13 @@ resources:
     owner: EngineerBetter
     repository: concourse-tasks
     access_token: ((github_access_token))
+- name: slack
+  type: slack-alert
+  source:
+    url: ((slack_webhook))
+    channel: ((slack_channel))
+    username: admin
+    password: ((concourse_password))
 
 jobs:
 - name: set-pipeline

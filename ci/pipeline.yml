@@ -50,8 +50,8 @@ resources:
     access_token: ((github_access_token))
 
 jobs:
-  <<: *alerts
 - name: set-pipeline
+  <<: *alerts
   serial: true
   plan:
   - get: concourse-tasks

@@ -16,7 +16,7 @@ cases:
         setup: |
           mkdir my-dir
           touch outer-file my-dir/inner-file
-          tar czvpf tarball.tgz .
+          tar czvpf tarball.tgz . --exclude tarball.tgz
   params:
     TARBALL_PATH: tarball.tgz
 - when: a glob is provided

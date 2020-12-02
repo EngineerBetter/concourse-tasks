@@ -1,4 +1,28 @@
 ---
+alerts: &alerts
+  on_success:
+    put: slack
+    params:
+      alert_type: fixed
+      disable: ((disable_alerts))
+  on_failure:
+    put: slack
+    params:
+      alert_type: broke
+      disable: ((disable_alerts))
+  on_error:
+    put: slack
+    params:
+      alert_type: broke
+      color: "#F5A623"
+      disable: ((disable_alerts))
+
+resource_types:
+- name: slack-alert
+  type: registry-image
+  source:
+    repository: arbourd/concourse-slack-alert-resource
+
 resources:
 - name: concourse-tasks
   type: git
@@ -26,6 +50,7 @@ resources:
     access_token: ((github_access_token))
 
 jobs:
+  <<: *alerts
 - name: set-pipeline
   serial: true
   plan:
@@ -35,6 +60,7 @@ jobs:
     file: concourse-tasks/ci/pipeline.yml
 
 - name: test
+  <<: *alerts
   serial: true
   plan:
   - get: concourse-tasks
@@ -69,6 +95,7 @@ jobs:
           ironbird --target this --specs "${csv}" -ginkgo.parallel.total 8 -ginkgo.slowSpecThreshold 120
 
 - name: release
+  <<: *alerts
   serial: true
   plan:
   - get: concourse-tasks

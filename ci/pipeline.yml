@@ -124,5 +124,5 @@ jobs:
   - put: release
     params:
       globs: [tar/concourse-tasks.tar.gz]
-      name: namefile/name
+      name: version/version
       tag: version/version

@@ -62,8 +62,15 @@ cases:
     TEMPLATES: template-3.yml
 - when: configured to ignore source document comments
   params: {IGNORE_UNKNOWN_COMMENTS: true}
-  it: # exits with a non-zero status code
+  it: # renders successfully
     has_inputs:
     - name: templates
       setup: *comment_setup
     exits: 0
+    has_outputs:
+    - name: rendered
+      for_which:
+      - bash: cat rendered.yml
+        says:
+        - |
+          key1: value1

@@ -23,7 +23,9 @@ run:
         templates="$templates -f templates/$tmpl"
       done
     fi
-    ytt $templates > rendered/rendered.yml
+    ytt "--ignore-unknown-comments=${IGNORE_UNKNOWN_COMMENTS}" \
+        $templates > rendered/rendered.yml
 
 params:
+  IGNORE_UNKNOWN_COMMENTS: false
   TEMPLATES:

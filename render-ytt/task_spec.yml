@@ -47,3 +47,23 @@ cases:
     exits: 1
   params:
     TEMPLATES: template-3.yml
+- when: source document includes comments
+  it: # exits with a non-zero status code
+    has_inputs:
+    - name: templates
+      setup: &comment_setup |
+        cat > template-1.yml <<EOF
+        #@ var1 = "value1"
+        # TODO: make ytt support comments by default
+        key1: #@ var1
+        EOF
+    exits: 1
+  params:
+    TEMPLATES: template-3.yml
+- when: configured to ignore source document comments
+  params: {IGNORE_UNKNOWN_COMMENTS: true}
+  it: # exits with a non-zero status code
+    has_inputs:
+    - name: templates
+      setup: *comment_setup
+    exits: 0

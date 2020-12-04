@@ -24,8 +24,9 @@ run:
       done
     fi
     ytt "--ignore-unknown-comments=${IGNORE_UNKNOWN_COMMENTS}" \
-        $templates > rendered/rendered.yml
+        $templates > rendered/"${RENDERED_FILENAME}"
 
 params:
   IGNORE_UNKNOWN_COMMENTS: false
+  RENDERED_FILENAME: rendered.yml
   TEMPLATES:

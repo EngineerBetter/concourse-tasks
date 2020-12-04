@@ -1,7 +1,7 @@
 ---
 config: task.yml
 cases:
-- when: invoked without any ytt templates
+- when: invoked without specified ytt templates
   it: # renders all templates to output
     has_inputs:
     - name: templates
@@ -19,11 +19,12 @@ cases:
     - name: rendered
       for_which:
       - bash: cat rendered.yml
-        says:
-        - |
-          key1: value1
-          ---
-          key2: value2
+        <<: &multifile_says
+          says:
+          - |
+            key1: value1
+            ---
+            key2: value2
 - when: invoked with specific ytt templates
   it: # renders specific templates to output
     has_inputs:
@@ -39,6 +40,18 @@ cases:
           key1: value1
   params:
     TEMPLATES: template-1.yml
+- when: given an output filename
+  params: {RENDERED_FILENAME: my-file.yaml}
+  it: # renders specific templates file with that name
+    exits: 0
+    has_inputs:
+    - name: templates
+      setup: *setup
+    has_outputs:
+    - name: rendered
+      for_which:
+      - bash: cat my-file.yaml
+        <<: *multifile_says
 - when: invoked with missing ytt templates
   it: # exits with a non-zero status code
     has_inputs:

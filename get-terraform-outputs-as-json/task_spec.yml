@@ -1,0 +1,37 @@
+---
+config: task.yml
+cases:
+- when: invoked
+  it: # writes outputs from terraform as flattened JSON
+    exits: 0
+    has_inputs:
+    - name: state
+      from: fixtures/state
+    has_outputs: &has_outputs
+    - name: outputs
+      for_which:
+      - bash: cat terraform.json | jq -c '.example_output'
+        says:
+        - '["a","b","c"]'
+      - bash: cat terraform.json | jq -c '.example_sensitive_output'
+        says:
+        - very secret key
+
+- when: invoked
+  it: # writes outputs from terraform as flattened JSON from different statefile
+    exits: 0
+    has_inputs:
+    - name: state
+      from: fixtures/different-statefile
+    has_outputs: *has_outputs
+  params:
+    STATEFILE: different-statefile-name.tfstate
+
+- when: invoked
+  it: # fails when statefile does not exist
+    has_inputs:
+    - name: state
+      setup: |
+        touch notthestate.tfstate
+    exits: 1
+

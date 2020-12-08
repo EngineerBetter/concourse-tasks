@@ -1,0 +1,25 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source: { repository: governmentpaas/curl-ssl }
+
+inputs:
+- name: state
+
+outputs:
+- name: outputs
+
+run:
+  path: ash
+  args:
+  - -euo
+  - pipefail
+  - -c
+  - |
+    cat state/$STATEFILE | \
+      jq '.values.outputs | to_entries | map({(.key): .value.value}) | add' \
+      > outputs/terraform.json
+
+params:
+  STATEFILE: terraform.tfstate

@@ -1,7 +1,7 @@
 ---
 config: task.yml
 cases:
-- when: invoked
+- when: invoked with normal statefile
   it: # writes outputs from terraform as flattened JSON
     exits: 0
     has_inputs:
@@ -17,8 +17,8 @@ cases:
         says:
         - very secret key
 
-- when: invoked
-  it: # writes outputs from terraform as flattened JSON from different statefile
+- when: invoked with a different statefile
+  it: # writes outputs from terraform as flattened JSON
     exits: 0
     has_inputs:
     - name: state
@@ -27,11 +27,17 @@ cases:
   params:
     STATEFILE: different-statefile-name.tfstate
 
-- when: invoked
-  it: # fails when statefile does not exist
+- when: invoked with a statefile containing invalid JSON
+  it:
+    exits: 5
+    has_inputs:
+    - name: state
+      from: fixtures/bad-statefile
+
+- when: invoked with a statefile that does not exist
+  it:
+    exits: 1
     has_inputs:
     - name: state
       setup: |
         touch notthestate.tfstate
-    exits: 1
-

@@ -18,7 +18,7 @@ run:
   - -c
   - |
     cat state/$STATEFILE | \
-      jq '.values.outputs | to_entries | map({(.key): .value.value}) | add' \
+      jq '[.. | .outputs?] | if (values | any | not) then "No outputs found in statefile\n" | halt_error else .[] | values end | to_entries | map({(.key): .value.value}) | add' \
       > outputs/terraform.json
 
 params:

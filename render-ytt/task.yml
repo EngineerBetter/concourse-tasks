@@ -15,6 +15,12 @@ run:
   args:
   - -c
   - |
+    cat > data.yml <<EOF
+    #@data/values
+    ---
+    $YTT_DATA_VALUES
+    EOF
+
     if [[ -z "$TEMPLATES" ]]; then
       templates="-f templates/"
     else
@@ -24,9 +30,11 @@ run:
       done
     fi
     ytt "--ignore-unknown-comments=${IGNORE_UNKNOWN_COMMENTS}" \
-        $templates > rendered/"${RENDERED_FILENAME}"
+        $templates \
+        --file data.yml > rendered/"${RENDERED_FILENAME:-rendered.yml}"
 
 params:
   IGNORE_UNKNOWN_COMMENTS: false
   RENDERED_FILENAME: rendered.yml
   TEMPLATES:
+  YTT_DATA_VALUES:

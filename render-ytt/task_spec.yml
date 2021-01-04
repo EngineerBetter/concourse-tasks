@@ -87,3 +87,31 @@ cases:
         says:
         - |
           key1: value1
+- when: data values are provided with YTT_ environment variables
+  params:
+    IGNORE_UNKNOWN_COMMENTS: true
+    YTT_DATA_VALUES: '{ "test": "hello_world", "test2": "hi" }'
+  it: # renders successfully
+    has_inputs:
+    - name: templates
+      setup: |
+        cat > template-1.yml <<EOF
+        #@ load("@ytt:data", "data")
+        test: #@ data.values.test
+        test2: #@ data.values.test2
+        EOF
+        cat > data.yml <<EOF
+        #@data/values
+        ---
+        test:
+        test2:
+        EOF
+    exits: 0
+    has_outputs:
+    - name: rendered
+      for_which:
+      - bash: cat rendered.yml
+        says:
+        - |
+          test: hello_world
+          test2: hi

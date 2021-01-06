@@ -1,0 +1,26 @@
+---
+config: task.yml
+cases:
+- when: invoked with toggle on
+  it: # exits 0
+    exits: 0
+  params:
+    TOGGLE: on
+
+- when: invoked with toggle true
+  it: # exits 0
+    exits: 0
+  params:
+    TOGGLE: true
+
+- when: invoked with toggle off
+  it: # exits 1
+    exits: 1
+  params:
+    TOGGLE: off
+
+- when: invoked with toggle false
+  it: # exits 1
+    exits: 1
+  params:
+    TOGGLE: false

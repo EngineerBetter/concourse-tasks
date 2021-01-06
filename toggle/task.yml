@@ -1,0 +1,14 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source: { repository: alpine }
+
+run:
+  path: ash
+  args:
+  - -c
+  - if echo "on On true True yes Yes enabled Enabled" | grep -qw "$TOGGLE"; then exit 0; else exit 1; fi
+
+params:
+  TOGGLE: true

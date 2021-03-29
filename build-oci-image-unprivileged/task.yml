@@ -32,6 +32,7 @@ run:
     --tarPath=./image/image.tar \
     --destination=${IMAGE_NAME}:${TAG} \
     --dockerfile=${DOCKERFILE} \
+    --reproducible \
     ${build_args_flags} \
     ${target_flag}
 
@@ -39,6 +40,6 @@ params:
   BUILD_ARGS: #comma-separated list, e.g. foo=bar,foz=baz
   CONTEXT: "."
   DOCKERFILE: Dockerfile
-  IMAGE_NAME:
-  TAG:
+  IMAGE_NAME: local-tarball
+  TAG: latest
   TARGET:

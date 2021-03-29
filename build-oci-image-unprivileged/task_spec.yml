@@ -1,6 +1,14 @@
 ---
 config: task.yml
 cases:
+- when: using defaults
+  it: # succeeds
+    exits: 0
+    says: ["succeeded"]
+    has_inputs:
+    - name: dockerfile-repo
+      from: fixtures/example-dockerfiles
+
 - when: specifying a build stage target
   within: 2m
   it: # succeeds
@@ -15,8 +23,6 @@ cases:
       - { bash: ls image.tar, exits: 0 }
       - { bash: tar -xf image.tar, exits: 0 }
   params:
-    IMAGE_NAME: my-image
-    TAG: 1.0
     TARGET: stage-1
 
 - when: using a build stage target not in the Dockerfile
@@ -27,8 +33,6 @@ cases:
     - name: dockerfile-repo
       from: fixtures/example-dockerfiles
   params:
-    IMAGE_NAME: my-image
-    TAG: 1.0
     TARGET: wrong-target
 
 - when: specifying a context and Dockerfile name explicitly
@@ -41,8 +45,6 @@ cases:
   params:
     CONTEXT: nested-directory
     DOCKERFILE: OtherDockerfile
-    IMAGE_NAME: my-image
-    TAG: 1.0
 
 - when: giving an incorrect Dockerfile name
   it: # errors
@@ -53,8 +55,6 @@ cases:
       from: fixtures/example-dockerfiles
   params:
     DOCKERFILE: Dockerfileeee
-    IMAGE_NAME: my-image
-    TAG: 1.0
 
 - when: passing mandatory args to a Dockerfile
   it: # succeeds
@@ -64,8 +64,6 @@ cases:
     - name: dockerfile-repo
       from: fixtures/example-dockerfiles
   params:
-    IMAGE_NAME: my-image
-    TAG: 1.0
     CONTEXT: mandatory-arg
     BUILD_ARGS: MANDATORY_ARG=lalalalalala,OTHER_ARG=hey
 
@@ -77,6 +75,4 @@ cases:
     - name: dockerfile-repo
       from: fixtures/example-dockerfiles
   params:
-    IMAGE_NAME: my-image
-    TAG: 1.0
     CONTEXT: mandatory-arg

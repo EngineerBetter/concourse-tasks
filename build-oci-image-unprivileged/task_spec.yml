@@ -39,7 +39,7 @@ cases:
     - name: dockerfile-repo
       from: fixtures/example-dockerfiles
   params:
-    CONTEXT: "dockerfile-repo/nested-directory"
+    CONTEXT: nested-directory
     DOCKERFILE: OtherDockerfile
     IMAGE_NAME: my-image
     TAG: 1.0
@@ -66,9 +66,8 @@ cases:
   params:
     IMAGE_NAME: my-image
     TAG: 1.0
-    CONTEXT: "dockerfile-repo/mandatory-arg"
+    CONTEXT: mandatory-arg
     BUILD_ARGS: MANDATORY_ARG=lalalalalala,OTHER_ARG=hey
-    DOCKERFILE: Dockerfile
 
 - when: not passing a mandatory arg to a Dockerfile
   it: # fails
@@ -80,5 +79,4 @@ cases:
   params:
     IMAGE_NAME: my-image
     TAG: 1.0
-    CONTEXT: "dockerfile-repo/mandatory-arg"
-    DOCKERFILE: Dockerfile
+    CONTEXT: mandatory-arg

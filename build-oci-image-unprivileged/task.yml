@@ -12,9 +12,9 @@ outputs:
 - name: image
 
 run:
-  path: /busybox/sh
+  path: /busybox/ash
   args:
-  - -c
+  - -euc
   - |
     build_args_flags=""
     for var in $(echo $BUILD_ARGS | sed "s/,/ /g"); do
@@ -26,19 +26,14 @@ run:
       target_flag="--target ${TARGET}"
     fi
 
-    dockerfile_flag=""
-    if [ -n "$DOCKERFILE" ]; then
-      dockerfile_flag="--dockerfile ${CONTEXT}/${DOCKERFILE}"
-    fi
-
     /kaniko/executor \
     --no-push \
     --context=dir://dockerfile-repo/${CONTEXT} \
     --tarPath=./image/image.tar \
     --destination=${IMAGE_NAME}:${TAG} \
+    --dockerfile=${DOCKERFILE} \
     ${build_args_flags} \
-    ${target_flag} \
-    ${dockerfile_flag}
+    ${target_flag}
 
 params:
   BUILD_ARGS: #comma-separated list, e.g. foo=bar,foz=baz

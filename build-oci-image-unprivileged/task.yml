@@ -11,6 +11,10 @@ inputs:
 outputs:
 - name: image
 
+container_limits:
+  cpu: 222
+  memory: 900000000
+
 run:
   path: /busybox/ash
   args:
